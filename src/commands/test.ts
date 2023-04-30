@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "discord.js";
 import type { ChatInputCommandInteraction } from "discord.js";
 import Command from "@interfaces/Command";
 
-const hola: Command = {
+const test: Command = {
   data: new SlashCommandBuilder()
     .setName("test")
     .setDescription("Testing command"),
@@ -11,4 +11,4 @@ const hola: Command = {
   },
 };
 
-export default hola;
+export default test;

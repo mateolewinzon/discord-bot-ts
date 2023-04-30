@@ -1,6 +1,13 @@
 import { readdirSync } from "fs";
 import { join } from "path";
-import { Collection, Events, Interaction, REST, Routes } from "discord.js";
+import {
+  Collection,
+  Events,
+  Interaction,
+  REST,
+  Routes,
+  Snowflake,
+} from "discord.js";
 import type {
   ChatInputCommandInteraction,
   Client,
@@ -11,6 +18,7 @@ import type Command from "@interfaces/Command";
 export class Bot {
   public slashCommands = new Array<ApplicationCommandDataResolvable>();
   public slashCommandsMap = new Collection<string, Command>();
+  public cooldowns = new Collection<string, Collection<Snowflake, number>>();
 
   constructor(public readonly client: Client, private readonly token: string) {
     console.log("Initializinng bot");
@@ -56,7 +64,32 @@ export class Bot {
 
         if (!command) return;
 
-        //TODO / optional: add cooldown or ban logic
+        if (!this.cooldowns.has(interaction.commandName)) {
+          this.cooldowns.set(interaction.commandName, new Collection());
+        }
+
+        const now = Date.now();
+        const timestamps: any = this.cooldowns.get(interaction.commandName);
+        const cooldownAmount = (command.cooldown || 1) * 1000;
+
+        if (timestamps.has(interaction.user.id)) {
+          const expirationTime =
+            timestamps.get(interaction.user.id) + cooldownAmount;
+
+          if (now < expirationTime) {
+            const timeLeft = (expirationTime - now) / 1000;
+            return interaction.reply({
+              content: `A donde crees que vas conn ese mucho dinero pinguino? Aguanta ${timeLeft} segundos, no seas ansioso`,
+              ephemeral: true,
+            });
+          }
+        }
+
+        timestamps.set(interaction.user.id, now);
+        setTimeout(
+          () => timestamps.delete(interaction.user.id),
+          cooldownAmount
+        );
 
         //TODO / optional: add permissions logic
 

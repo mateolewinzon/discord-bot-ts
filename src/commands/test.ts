@@ -6,6 +6,7 @@ const test: Command = {
   data: new SlashCommandBuilder()
     .setName("test")
     .setDescription("Testing command"),
+  cooldown: 10,
   async execute(interaction: ChatInputCommandInteraction) {
     await interaction.reply("kochen");
   },

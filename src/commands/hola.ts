@@ -1,11 +1,14 @@
 import { SlashCommandBuilder } from "discord.js";
-import type { CommandInteraction } from "discord.js";
+import type { ChatInputCommandInteraction } from "discord.js";
+import Command from "@interfaces/Command";
 
-export default {
+const hola: Command = {
   data: new SlashCommandBuilder()
-    .setName("Test")
+    .setName("test")
     .setDescription("Testing command"),
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction: ChatInputCommandInteraction) {
     await interaction.reply("kochen");
   },
 };
+
+export default hola;

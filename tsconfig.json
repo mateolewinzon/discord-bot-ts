@@ -8,7 +8,8 @@
       "@config/*": ["./src/config/*"],
       "@commannds/*": ["./src/commannds/*"],
       "@interfaces/*": ["./src/interfaces/*"],
-      "@helpers/*": ["./src/helpers/*"]
+      "@helpers/*": ["./src/helpers/*"],
+      "@services/*": ["./src/services/*"]
     },
     "resolveJsonModule": true,
     "allowJs": true,

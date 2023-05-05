@@ -7,7 +7,7 @@ Si encuentran exposed keys, ya las desactivé. Soy boludo pero no tonto
 ## Comandos
 
 - /story <input>
-  - Genera una un cuentito acerca de lo que quieras, usando GPT
+  - Genera un cuentito acerca de lo que quieras, usando GPT
 - /partidos
   - Los próximos partidos de la liga argentina
 - /jugador 

@@ -23,7 +23,6 @@ class GPTChat {
       const completion = await this.openai.createChatCompletion(
         completionRequest
       );
-      console.log(completion);
       return completion.data.choices[0].message?.content!;
     } catch (error) {
       console.error("Error creating chat completion:", error);
@@ -42,6 +41,5 @@ export async function createStory(text: string) {
     },
   ]);
 
-  console.log(story);
   return story;
 }

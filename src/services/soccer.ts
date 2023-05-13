@@ -21,7 +21,6 @@ export async function getRandomArgentinaPlayer() {
     },
   });
   const randomIndex = Math.floor(Math.random() * response.length);
-  console.log(response[randomIndex]);
   return response[randomIndex];
 }
 

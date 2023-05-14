@@ -1,14 +1,4 @@
 import axios, { AxiosRequestConfig, AxiosInstance, AxiosResponse } from "axios";
-
-const options: AxiosRequestConfig = {
-  method: "GET",
-  url: "https://openai80.p.rapidapi.com/models",
-  headers: {
-    "X-RapidAPI-Key": "67f51fba44mshbc88c263c30ce3ap123141jsn80f25ba615d9",
-    "X-RapidAPI-Host": "openai80.p.rapidapi.com",
-  },
-};
-
 export class Service {
   private instance: AxiosInstance;
 

@@ -20,7 +20,7 @@ ${home} - ${away}
 `;
 }
 
-const test: Command = {
+const partidos: Command = {
   data: new SlashCommandBuilder()
     .setName("partidos")
     .setDescription(
@@ -40,4 +40,4 @@ const test: Command = {
   },
 };
 
-export default test;
+export default partidos;

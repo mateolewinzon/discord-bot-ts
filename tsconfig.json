@@ -9,7 +9,8 @@
       "@commannds/*": ["./src/commannds/*"],
       "@interfaces/*": ["./src/interfaces/*"],
       "@helpers/*": ["./src/helpers/*"],
-      "@services/*": ["./src/services/*"]
+      "@services/*": ["./src/services/*"],
+      "@lib/*": ["./src/lib/*"]
     },
     "resolveJsonModule": true,
     "allowJs": true,

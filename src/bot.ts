@@ -14,6 +14,7 @@ import type {
   ApplicationCommandDataResolvable,
 } from "discord.js";
 import type Command from "@interfaces/Command";
+import ErrorHandler from "@helpers/errors/handler";
 
 export class Bot {
   public slashCommands = new Array<ApplicationCommandDataResolvable>();
@@ -30,8 +31,6 @@ export class Bot {
 
       this.registerSlashCommands();
     });
-
-    client.on("error", console.error);
 
     client.on("warn", console.log);
 
@@ -54,58 +53,53 @@ export class Bot {
     });
   }
 
-  private async onInteractionCreate() {
+  private onInteractionCreate() {
     this.client.on(
       Events.InteractionCreate,
-      async (interaction: Interaction): Promise<any> => {
-        if (!interaction.isChatInputCommand()) return;
-
-        const command = this.slashCommandsMap.get(interaction.commandName);
-
-        if (!command) return;
-
-        if (!this.cooldowns.has(interaction.commandName)) {
-          this.cooldowns.set(interaction.commandName, new Collection());
-        }
-
-        const now = Date.now();
-        const timestamps: any = this.cooldowns.get(interaction.commandName);
-        const cooldownAmount = (command.cooldown || 1) * 1000;
-
-        if (timestamps.has(interaction.user.id)) {
-          const expirationTime =
-            timestamps.get(interaction.user.id) + cooldownAmount;
-
-          if (now < expirationTime) {
-            const timeLeft = (expirationTime - now) / 1000;
-            return interaction.reply({
-              content: `A donde crees que vas conn ese mucho dinero pinguino? Aguanta ${timeLeft} segundos, no seas ansioso`,
-              ephemeral: true,
-            });
-          }
-        }
-
-        timestamps.set(interaction.user.id, now);
-        setTimeout(
-          () => timestamps.delete(interaction.user.id),
-          cooldownAmount
-        );
-
-        //TODO / optional: add permissions logic
-
+      async (interaction: Interaction): Promise<void> => {
         try {
-          command.execute(interaction as ChatInputCommandInteraction);
+          await this.handleInteraction(interaction);
         } catch (error: any) {
-          console.error(error);
-          interaction
-            .reply({
-              content:
-                "Hubo terrible error en el server. Lewsha anda a arreglarlo burro",
-              ephemeral: true,
-            })
-            .catch(console.error);
+          ErrorHandler.handleError(
+            error,
+            interaction as ChatInputCommandInteraction
+          );
         }
       }
     );
+  }
+
+  private async handleInteraction(interaction: Interaction) {
+    if (!interaction.isChatInputCommand()) return;
+
+    const command = this.slashCommandsMap.get(interaction.commandName);
+
+    if (!command) return;
+
+    if (!this.cooldowns.has(interaction.commandName)) {
+      this.cooldowns.set(interaction.commandName, new Collection());
+    }
+
+    const now = Date.now();
+    const timestamps: any = this.cooldowns.get(interaction.commandName);
+    const cooldownAmount = (command.cooldown || 1) * 1000;
+
+    if (timestamps.has(interaction.user.id)) {
+      const expirationTime =
+        timestamps.get(interaction.user.id) + cooldownAmount;
+
+      if (now < expirationTime) {
+        const timeLeft = (expirationTime - now) / 1000;
+        return interaction.reply({
+          content: `A donde crees que vas conn ese mucho dinero pinguino? Aguanta ${timeLeft} segundos, no seas ansioso`,
+          ephemeral: true,
+        });
+      }
+    }
+
+    timestamps.set(interaction.user.id, now);
+    setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
+
+    await command.execute(interaction as ChatInputCommandInteraction);
   }
 }
